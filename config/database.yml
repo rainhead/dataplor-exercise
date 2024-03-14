@@ -1,0 +1,17 @@
+# Example of a local database setup.
+login: &login
+  adapter: postgresql
+  host: localhost
+  encoding: utf8
+
+development:
+  <<: *login
+  database: dataplor_development
+
+test:
+  <<: *login
+  database: dataplor_test
+
+production:
+  <<: *login
+  database: dataplor_production
