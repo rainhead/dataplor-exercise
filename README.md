@@ -46,6 +46,11 @@ At dataPlor we write software that deals with exponentially expanding data. We a
 
 ## Solution
 
+```
+\copy nodes from 'nodes.csv' with (format csv, header true);
+\copy birds from 'birds.csv' with (format csv, header true);
+```
+
 - http://localhost:3000/common_ancestor?a=2168933&b=2168965
 - http://localhost:3000/birds?node_ids=2169160
 
@@ -55,6 +60,16 @@ Because the ancestry of a node may be very large, it would be much more efficien
 
 PostgreSQL provides recursive common table expressions (CTEs) as a means of performing recursive operations within a single query. We create a CTE for the ancestry of each input node, then join them together to find the nodes' common ancestry. By keeping track of our recursion depth, we can distinguish the highest and lowest common ancestors.
 
+
+### Discussion
+
+As a business' data expands in volume and complexity, it becomes more important to rely on the features and strictures of a database management system. SQL features like views and data constraints are not just convenient but necessary for the business to keep costs down and revenues up.
+
+Using those features goes against the grain of ActiveRecord, which exposes only a small, portable subset of them. Adopting a library to ease their integration with Rails would go against the spirit of the exercise.
+
+My main concern here is for the maintainability of the code. Inlined SQL literals are concise and fit to purpose, but harder to reuse and compose and easier to accidentally break than ActiveRecord scopes.
+
+Separately, as a matter of organization, I made `Node.common_ancestor` a class method on Node. In Rails, there is a strong tendency to shove a kitchen sink of responsibility into model classes, which quickly become hard to maintain. The bundle of data exposed by `/common_ancestor` is properly its own model which deserves to be formalized. With additional use cases or business requirements, it may be clearer exactly what is being modeled and what to call it.
 
 ### Notes
 
